@@ -3,8 +3,10 @@ import {
   applyBidToLot,
   buildWheelSegments,
   calcBank,
+  clearAuctionState,
   cloneLots,
   createLot,
+  emptyRowValues,
   formatTimer,
   getWheelLots,
   isValidBid,
@@ -134,11 +136,13 @@ const displayLots = (arr) => {
     lotsItemDOMLength = lotsItemDOM.length;
   }
 
+  const empty = emptyRowValues();
+
   for (let i = 0; i < lotsItemDOMLength; i++) {
     const item = lotsItemDOM[i];
-    item.querySelector('.auc__lot').value = '';
-    item.querySelector('.auc__total-sum').value = '';
-    item.querySelector('.auc__current-sum').value = '';
+    item.querySelector('.auc__lot').value = empty.name;
+    item.querySelector('.auc__total-sum').value = empty.total;
+    item.querySelector('.auc__current-sum').value = empty.bid;
     item.querySelector('[add-sum]').removeAttribute('data-lot-id');
     item.classList.remove('auc__item--first', 'auc__item--second');
   }
@@ -146,7 +150,7 @@ const displayLots = (arr) => {
   for (let i = 0; i < ARR_LENGTH; i++) {
     const item = lotsItemDOM[i];
     item.querySelector('.auc__lot').value = arr[i].name;
-    item.querySelector('.auc__total-sum').value = arr[i].totalBet;
+    item.querySelector('.auc__total-sum').value = String(arr[i].totalBet);
     item.querySelector('[add-sum]').setAttribute('data-lot-id', String(arr[i].id));
     if (i === 0) item.classList.add('auc__item--first');
     if (i === 1) item.classList.add('auc__item--second');
@@ -190,8 +194,13 @@ const readLocalStorage = () => {
     displayTimer(secondsGlobal > 0 ? secondsGlobal : 600);
     displayLots(lotArray);
   } else {
-    displayTimer(600);
-    rebuildWheel();
+    const initial = clearAuctionState(600);
+    lotArray = initial.lots;
+    logArray = initial.logs;
+    logArrayId = initial.logIndex;
+    lotsId = initial.nextLotId;
+    displayTimer(initial.timerSeconds);
+    displayLots(lotArray);
   }
 };
 
@@ -453,8 +462,22 @@ ADD_LOT_BTN.addEventListener('click', () => {
 
 CLEAR_LOTS_BTN.addEventListener('click', () => {
   if (!window.confirm('データを全部消しますか？ / Clear all data?')) return;
+
+  // Reset in place (do not rely on reload — browsers may restore form values).
+  const initial = clearAuctionState(600);
+  lotArray = initial.lots;
+  logArray = initial.logs;
+  logArrayId = initial.logIndex;
+  lotsId = initial.nextLotId;
+  wheelRotationDeg = 0;
+  wheelSpinning = false;
+  if (WHEEL_RESULT) WHEEL_RESULT.classList.remove('wheel__result--win');
+
   window.localStorage.clear();
-  window.location.reload();
+  displayTimer(initial.timerSeconds);
+  displayLots(lotArray);
+  setWheelResult('—');
+  setHelp('データをクリアしました', 'All data cleared');
 });
 
 BACK_BTN.addEventListener('click', logBack);

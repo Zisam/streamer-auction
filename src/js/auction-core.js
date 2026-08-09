@@ -128,3 +128,59 @@ export function spinTargetRotation({
 export function cloneLots(lots) {
   return lots.map((lot) => ({ ...lot }));
 }
+
+/** Fresh auction session values after pressing Clear (X). */
+export function createInitialAuctionState(defaultTimerSeconds = 600) {
+  return {
+    lots: [],
+    logs: [[]],
+    logIndex: 0,
+    nextLotId: 0,
+    timerSeconds: defaultTimerSeconds,
+    bank: 0
+  };
+}
+
+/** Clear lots/logs/ids while keeping a usable default timer. */
+export function clearAuctionState(defaultTimerSeconds = 600) {
+  return createInitialAuctionState(defaultTimerSeconds);
+}
+
+/** Values each visible row should show after a full clear. */
+export function emptyRowValues() {
+  return {
+    name: '',
+    total: '0',
+    bid: ''
+  };
+}
+
+export function nextLotIdFromLots(lots) {
+  if (!lots.length) return 0;
+  return lots.reduce((max, lot) => Math.max(max, Number(lot.id) || 0), -1) + 1;
+}
+
+export function pushLog(logs, lots) {
+  const next = [...logs, cloneLots(lots)];
+  return {
+    logs: next,
+    logIndex: next.length - 1
+  };
+}
+
+export function undoLog(logs, logIndex) {
+  if (logIndex <= 0) {
+    return { lots: cloneLots(logs[0] || []), logIndex: 0 };
+  }
+  const nextIndex = logIndex - 1;
+  return { lots: cloneLots(logs[nextIndex]), logIndex: nextIndex };
+}
+
+export function redoLog(logs, logIndex) {
+  if (logIndex >= logs.length - 1) {
+    return { lots: cloneLots(logs[logIndex] || []), logIndex };
+  }
+  const nextIndex = logIndex + 1;
+  return { lots: cloneLots(logs[nextIndex]), logIndex: nextIndex };
+}
+
