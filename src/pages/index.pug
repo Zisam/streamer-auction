@@ -4,35 +4,53 @@ block content
   main.auc
     .auc__inner
       .auc__left
+        p.auc__help(help-status)
+          span.auc__help-ja 名前 → 金額 → + でバンクに加算
+          span.auc__help-en Name → amount → + adds to bank
         .auc__controllers
-          button.auc__clear(title="データを消去 / Clear storage" clear): +icon("auc__icon", "reset")
+          button.auc__clear(type="button" title="データを消去 / Clear storage" clear): +icon("auc__icon", "reset")
           .auc__edit-wrapper
-            button.auc__edit(title="戻る / Undo" auc-back): +icon("auc__icon auc__icon--revert", "arrow")
-            button.auc__edit(title="進む / Redo" auc-forward): +icon("auc__icon", "arrow")
+            button.auc__edit(type="button" title="戻る / Undo" auc-back): +icon("auc__icon auc__icon--revert", "arrow")
+            button.auc__edit(type="button" title="進む / Redo" auc-forward): +icon("auc__icon", "arrow")
+        .auc__cols(aria-hidden="true")
+          span 名前 / Name
+          span 合計 / Total
+          span +入札 / Bid
+          span
         .auc__lots-wrapper
           +auc-item("auc__item--first")
           +auc-item("auc__item--second")
           +auc-item
           +auc-item
-        button.auc__add-lot(add-lot title="ロットを追加 / Add lot"): +icon("auc__icon", "plus")
+        button.auc__add-lot(type="button" add-lot title="ロットを追加 / Add lot")
+          +icon("auc__icon", "plus")
+          span.auc__add-lot-label 行を追加 / Add row
       .auc__right
         p.auc__total
           span.auc__label-ja バンク
           span.auc__label-en Bank
           |
           span(total) 0
+        p.auc__timer-label
+          span.auc__label-ja タイマー
+          span.auc__label-en Timer (not roulette)
         .auc__timer-wrapper
           .auc__timer
-            button.auc__start(start title="開始 / 停止 — Start / Stop")
+            button.auc__start(type="button" start title="タイマー開始/停止 — Start/pause timer")
             p.auc__time(timer)
               span(minutes) 10
               |:
               span(seconds) 00
-            button.auc__reset(reset title="リセット / Reset")
+            button.auc__reset(type="button" reset title="タイマーリセット / Reset timer")
               span.auc__label-ja リセット
               span.auc__label-en Reset
           .auc__timer-controllers
-            button.auc__timer-btn(plus-one-min title="+1 min") +1
-            button.auc__timer-btn(plus-two-min title="+2 min") +2
-            button.auc__timer-btn(ten-min title="=10 min") =10
-            button.auc__timer-btn(minus-one-min title="-1 min") -1
+            button.auc__timer-btn(type="button" plus-one-min title="+1 min") +1
+            button.auc__timer-btn(type="button" plus-two-min title="+2 min") +2
+            button.auc__timer-btn(type="button" ten-min title="=10 min") =10
+            button.auc__timer-btn(type="button" minus-one-min title="-1 min") -1
+        ol.auc__howto
+          li: strong 1. 名前を入力 / Enter name
+          li: strong 2. 右欄に金額 / Type bid amount
+          li #[strong 3.] #[strong +] で合計＆バンクへ / Add to total & bank
+          li: strong 4. 緑ボタン＝タイマー開始 / Green = start timer

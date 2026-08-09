@@ -93,15 +93,15 @@ input {
 
 /* —— Header —— */
 .header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
   width: 100%;
-  padding: 1rem 1.5rem 1.2rem;
+  min-height: 7.2rem;
+  padding: 1rem 1.5rem 1.4rem;
   text-align: center;
-  background:
-    linear-gradient(180deg, #3a101c 0%, #1a0a10 70%, transparent 100%);
+  background: linear-gradient(180deg, #3a101c 0%, #1a0a10 100%);
   border-bottom: 1px solid rgba(212, 176, 106, 0.45);
   box-shadow:
     0 1px 0 rgba(240, 215, 138, 0.15),
@@ -166,7 +166,7 @@ input {
 .auc {
   position: relative;
   min-height: 100vh;
-  padding: 7rem 2rem 2rem;
+  padding: 9rem 2rem 2rem;
   overflow: hidden;
   background-color: var(--ink);
   background-image:
@@ -204,7 +204,7 @@ input {
   grid-template-columns: minmax(0, 1fr) minmax(34rem, 42rem);
   gap: 2.4rem;
   align-items: start;
-  height: calc(100vh - 9rem);
+  height: calc(100vh - 11rem);
 }
 
 @media (max-width: 74.9375em) {
@@ -326,10 +326,112 @@ input {
   width: 2rem;
   height: 2rem;
   fill: currentColor;
+  pointer-events: none;
 }
 
 .auc__icon--revert {
   transform: scale(-1, 1);
+}
+
+.auc__help {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(212, 176, 106, 0.35);
+  background: rgba(26, 16, 20, 0.75);
+  color: var(--gold-bright);
+  font-size: 1.45rem;
+  letter-spacing: 0.04em;
+}
+
+.auc__help-en {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.auc__cols {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) 14rem 12rem 4.8rem;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+  padding: 0 0.1rem;
+  font-family: var(--font-ui);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 61.9375em) {
+  .auc__cols {
+    grid-template-columns: minmax(10rem, 1fr) 11rem 9rem 4.4rem;
+    gap: 0.7rem;
+  }
+}
+
+.auc__total-sum {
+  opacity: 0.95;
+  cursor: default;
+  color: var(--gold-bright);
+}
+
+.auc__field--flash {
+  border-color: #ff6b7a !important;
+  box-shadow: 0 0 0 2px rgba(255, 107, 122, 0.45) !important;
+  animation: field-shake 0.35s ease;
+}
+
+@keyframes field-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.auc__add-lot {
+  gap: 0.8rem;
+}
+
+.auc__add-lot-label {
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+}
+
+.auc__timer-label {
+  margin: -0.4rem 0 0.2rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+.auc__howto {
+  margin: 0.4rem 0 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-top: 1px solid rgba(212, 176, 106, 0.25);
+  list-style: none;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.auc__howto li + li {
+  margin-top: 0.35rem;
+}
+
+.auc__howto strong {
+  color: var(--gold-bright);
+  font-weight: 600;
 }
 
 /* —— Lots —— */

@@ -7,7 +7,7 @@
   <meta content="ie=edge" http-equiv="x-ua-compatible">
   <meta name="description" content="Streamer auction board — Japanese &amp; English (OBS-friendly)">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Shippori+Mincho:wght@400;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.min.css?v=gothic5">
+  <link rel="stylesheet" href="css/style.min.css?v=ux6">
 </head>
 <body>
   <header class="header">
@@ -18,66 +18,104 @@
   <main class="auc">
     <div class="auc__inner">
       <div class="auc__left">
+        <p class="auc__help" help-status>
+          <span class="auc__help-ja">名前 → 金額 → + でバンクに加算</span>
+          <span class="auc__help-en">Name → amount → + adds to bank</span>
+        </p>
         <div class="auc__controllers">
-          <button class="auc__clear" title="データを消去 / Clear storage" clear>
-            <svg class="auc__icon"><use xlink:href="img/sprite.svg#reset"></use></svg>
+          <button class="auc__clear" type="button" title="データを消去 / Clear storage" clear>
+            <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#reset"></use></svg>
           </button>
           <div class="auc__edit-wrapper">
-            <button class="auc__edit" title="戻る / Undo" auc-back>
-              <svg class="auc__icon auc__icon--revert"><use xlink:href="img/sprite.svg#arrow"></use></svg>
+            <button class="auc__edit" type="button" title="戻る / Undo" auc-back>
+              <svg class="auc__icon auc__icon--revert" aria-hidden="true"><use xlink:href="img/sprite.svg#arrow"></use></svg>
             </button>
-            <button class="auc__edit" title="進む / Redo" auc-forward>
-              <svg class="auc__icon"><use xlink:href="img/sprite.svg#arrow"></use></svg>
+            <button class="auc__edit" type="button" title="進む / Redo" auc-forward>
+              <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#arrow"></use></svg>
             </button>
           </div>
+        </div>
+        <div class="auc__cols" aria-hidden="true">
+          <span>名前 / Name</span>
+          <span>合計 / Total</span>
+          <span>+入札 / Bid</span>
+          <span></span>
         </div>
         <div class="auc__lots-wrapper">
           <div class="auc__item auc__item--first">
-            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
-            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
-            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
-            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+            <input class="auc__lot" type="text" title="名前 / Name" placeholder="名前 / Name" autocomplete="off">
+            <input class="auc__total-sum" type="text" inputmode="decimal" readonly tabindex="-1" title="合計（自動） / Total (auto)" placeholder="0">
+            <input class="auc__current-sum" type="text" inputmode="decimal" title="今回の入札 / Bid to add" placeholder="+金額 / Amount" autocomplete="off">
+            <button class="auc__add-sum" type="button" add-sum title="合計に加算 / Add to total">
+              <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#plus"></use></svg>
+            </button>
           </div>
           <div class="auc__item auc__item--second">
-            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
-            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
-            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
-            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+            <input class="auc__lot" type="text" title="名前 / Name" placeholder="名前 / Name" autocomplete="off">
+            <input class="auc__total-sum" type="text" inputmode="decimal" readonly tabindex="-1" title="合計（自動） / Total (auto)" placeholder="0">
+            <input class="auc__current-sum" type="text" inputmode="decimal" title="今回の入札 / Bid to add" placeholder="+金額 / Amount" autocomplete="off">
+            <button class="auc__add-sum" type="button" add-sum title="合計に加算 / Add to total">
+              <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#plus"></use></svg>
+            </button>
           </div>
           <div class="auc__item">
-            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
-            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
-            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
-            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+            <input class="auc__lot" type="text" title="名前 / Name" placeholder="名前 / Name" autocomplete="off">
+            <input class="auc__total-sum" type="text" inputmode="decimal" readonly tabindex="-1" title="合計（自動） / Total (auto)" placeholder="0">
+            <input class="auc__current-sum" type="text" inputmode="decimal" title="今回の入札 / Bid to add" placeholder="+金額 / Amount" autocomplete="off">
+            <button class="auc__add-sum" type="button" add-sum title="合計に加算 / Add to total">
+              <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#plus"></use></svg>
+            </button>
           </div>
           <div class="auc__item">
-            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
-            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
-            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
-            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+            <input class="auc__lot" type="text" title="名前 / Name" placeholder="名前 / Name" autocomplete="off">
+            <input class="auc__total-sum" type="text" inputmode="decimal" readonly tabindex="-1" title="合計（自動） / Total (auto)" placeholder="0">
+            <input class="auc__current-sum" type="text" inputmode="decimal" title="今回の入札 / Bid to add" placeholder="+金額 / Amount" autocomplete="off">
+            <button class="auc__add-sum" type="button" add-sum title="合計に加算 / Add to total">
+              <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#plus"></use></svg>
+            </button>
           </div>
         </div>
-        <button class="auc__add-lot" add-lot title="ロットを追加 / Add lot"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+        <button class="auc__add-lot" type="button" add-lot title="ロットを追加 / Add lot">
+          <svg class="auc__icon" aria-hidden="true"><use xlink:href="img/sprite.svg#plus"></use></svg>
+          <span class="auc__add-lot-label">行を追加 / Add row</span>
+        </button>
       </div>
       <div class="auc__right">
-        <p class="auc__total"><span class="auc__label-ja">バンク</span><span class="auc__label-en">Bank</span> <span total>0</span></p>
+        <p class="auc__total">
+          <span class="auc__label-ja">バンク</span>
+          <span class="auc__label-en">Bank</span>
+          <span total>0</span>
+        </p>
+        <p class="auc__timer-label">
+          <span class="auc__label-ja">タイマー</span>
+          <span class="auc__label-en">Timer (not roulette)</span>
+        </p>
         <div class="auc__timer-wrapper">
           <div class="auc__timer">
-            <button class="auc__start" start title="開始 / 停止 — Start / Stop"></button>
+            <button class="auc__start" type="button" start title="タイマー開始/停止 — Start/pause timer"></button>
             <p class="auc__time" timer><span minutes>10</span>:<span seconds>00</span></p>
-            <button class="auc__reset" reset title="リセット / Reset"><span class="auc__label-ja">リセット</span><span class="auc__label-en">Reset</span></button>
+            <button class="auc__reset" type="button" reset title="タイマーリセット / Reset timer">
+              <span class="auc__label-ja">リセット</span>
+              <span class="auc__label-en">Reset</span>
+            </button>
           </div>
           <div class="auc__timer-controllers">
-            <button class="auc__timer-btn" plus-one-min title="+1 min">+1</button>
-            <button class="auc__timer-btn" plus-two-min title="+2 min">+2</button>
-            <button class="auc__timer-btn" ten-min title="=10 min">=10</button>
-            <button class="auc__timer-btn" minus-one-min title="-1 min">-1</button>
+            <button class="auc__timer-btn" type="button" plus-one-min title="+1 min">+1</button>
+            <button class="auc__timer-btn" type="button" plus-two-min title="+2 min">+2</button>
+            <button class="auc__timer-btn" type="button" ten-min title="=10 min">=10</button>
+            <button class="auc__timer-btn" type="button" minus-one-min title="-1 min">-1</button>
           </div>
         </div>
+        <ol class="auc__howto">
+          <li><strong>1.</strong> 名前を入力 / Enter name</li>
+          <li><strong>2.</strong> 右欄に金額 / Type bid amount</li>
+          <li><strong>3.</strong> <strong>+</strong> で合計＆バンクへ / Add to total &amp; bank</li>
+          <li><strong>4.</strong> 緑ボタン＝タイマー開始 / Green = start timer</li>
+        </ol>
       </div>
     </div>
   </main>
   <footer></footer>
-  <script src="js/main.min.js"></script>
+  <script src="js/main.min.js?v=ux6"></script>
 </body>
 </html>
