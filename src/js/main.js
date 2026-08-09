@@ -73,10 +73,10 @@ const resetTimer = () => {
 
 const addLot = () => {
   LOTS_DOM.insertAdjacentHTML('beforeend',
-    `<div class="auc__item"><input class="auc__lot" type="text" title="Название лота"><input class="auc__total-sum"
-    type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Всего внесено"><input
-    class="auc__current-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');"
-    title="Ввод суммы"><button class="auc__add-sum" add-sum title="Внести сумму"><svg class="auc__icon">
+    `<div class="auc__item"><input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name"><input class="auc__total-sum"
+    type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計"><input
+    class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');"
+    title="入札額 / Bid" placeholder="入札"><button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon">
       <use xlink:href="img/sprite.svg#plus"></use>
     </svg></button></div>`
   );

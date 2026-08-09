@@ -242,6 +242,34 @@
   color: $color-input-second;
 }
 
+.auc__label-ja {
+  margin-right: .35em;
+}
+
+.auc__label-en {
+  font-size: .55em;
+  font-weight: 400;
+  margin-right: .5em;
+  opacity: .75;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.auc__reset {
+  flex-direction: column;
+  line-height: 1.15;
+
+  .auc__label-ja {
+    margin-right: 0;
+    font-size: 1.35rem;
+  }
+
+  .auc__label-en {
+    margin-right: 0;
+    font-size: .85rem;
+  }
+}
+
 .auc__timer {
   display: flex;
   align-items: center;
@@ -292,7 +320,7 @@
     width: 100%;
     height: 100%;
 
-    content: 'Старт';
+    content: '開始';
   }
 
   &--stop {
@@ -300,7 +328,7 @@
       width: 100%;
       height: 100%;
 
-      content: 'Стоп';
+      content: '停止';
     }
   }
 }

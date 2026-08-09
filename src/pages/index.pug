@@ -5,33 +5,34 @@ block content
     .auc__inner
       .auc__left
         .auc__controllers
-          button.auc__clear(title="Очистить хранилище" clear): +icon("auc__icon", "reset")
+          button.auc__clear(title="データを消去 / Clear storage" clear): +icon("auc__icon", "reset")
           .auc__edit-wrapper
-            button.auc__edit(title="Вернуться назад" auc-back): +icon("auc__icon auc__icon--revert", "arrow")
-            button.auc__edit(title="Вернуться вперёд" auc-forward): +icon("auc__icon", "arrow")
+            button.auc__edit(title="戻る / Undo" auc-back): +icon("auc__icon auc__icon--revert", "arrow")
+            button.auc__edit(title="進む / Redo" auc-forward): +icon("auc__icon", "arrow")
         .auc__lots-wrapper
           +auc-item("auc__item--first")
           +auc-item("auc__item--second")
           +auc-item
           +auc-item
-        button.auc__add-lot(add-lot title="Добавить лот"): +icon("auc__icon", "plus")
+        button.auc__add-lot(add-lot title="ロットを追加 / Add lot"): +icon("auc__icon", "plus")
       .auc__right
         p.auc__total
-          |Банк:
+          span.auc__label-ja バンク
+          span.auc__label-en Bank
           |
           span(total) 0
         .auc__timer-wrapper
           .auc__timer
-            button.auc__start(start)
+            button.auc__start(start title="開始 / 停止 — Start / Stop")
             p.auc__time(timer)
               span(minutes) 10
               |:
               span(seconds) 00
-              //- |.
-              //- span(mseconds) 000
-            button.auc__reset(reset) Сброс
+            button.auc__reset(reset title="リセット / Reset")
+              span.auc__label-ja リセット
+              span.auc__label-en Reset
           .auc__timer-controllers
-            button.auc__timer-btn(plus-one-min) +1
-            button.auc__timer-btn(plus-two-min) +2
-            button.auc__timer-btn(ten-min) =10
-            button.auc__timer-btn(minus-one-min) -1
+            button.auc__timer-btn(plus-one-min title="+1 min") +1
+            button.auc__timer-btn(plus-two-min title="+2 min") +2
+            button.auc__timer-btn(ten-min title="=10 min") =10
+            button.auc__timer-btn(minus-one-min title="-1 min") -1

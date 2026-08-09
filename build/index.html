@@ -1,2 +1,83 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Auction</title><meta content="width=device-width, initial-scale=1" name="viewport"><meta content="ie=edge" http-equiv="x-ua-compatible"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.min.css"></head><body><header class="header"><h1 class="header__title"><a href="index.html"><span>Помойный</span> аукцион</a></h1></header><main class="auc"><div class="auc__inner"><div class="auc__left"><div class="auc__controllers"><button class="auc__clear" title="Очистить хранилище" clear><svg class="auc__icon"><use xlink:href="img/sprite.svg#reset"></use></svg></button><div class="auc__edit-wrapper"><button class="auc__edit" title="Вернуться назад" auc-back><svg class="auc__icon auc__icon--revert"><use xlink:href="img/sprite.svg#arrow"></use></svg></button><button class="auc__edit" title="Вернуться вперёд" auc-forward><svg class="auc__icon"><use xlink:href="img/sprite.svg#arrow"></use></svg></button></div></div><div class="auc__lots-wrapper"><div class="auc__item auc__item--first"><input class="auc__lot" type="text" title="Название лота"><input class="auc__total-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Всего внесено"><input class="auc__current-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Ввод суммы"><button class="auc__add-sum" add-sum title="Внести сумму"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button></div><div class="auc__item auc__item--second"><input class="auc__lot" type="text" title="Название лота"><input class="auc__total-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Всего внесено"><input class="auc__current-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Ввод суммы"><button class="auc__add-sum" add-sum title="Внести сумму"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button></div><div class="auc__item"><input class="auc__lot" type="text" title="Название лота"><input class="auc__total-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Всего внесено"><input class="auc__current-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Ввод суммы"><button class="auc__add-sum" add-sum title="Внести сумму"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button></div><div class="auc__item"><input class="auc__lot" type="text" title="Название лота"><input class="auc__total-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Всего внесено"><input class="auc__current-sum" type="text" oninput="this.value=this.value.replace(/[^0-9]^./g,'');" title="Ввод суммы"><button class="auc__add-sum" add-sum title="Внести сумму"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button></div></div><button class="auc__add-lot" add-lot title="Добавить лот"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button></div><div class="auc__right"><p class="auc__total">Банк:
-<span total>0</span></p><div class="auc__timer-wrapper"><div class="auc__timer"><button class="auc__start" start></button><p class="auc__time" timer><span minutes>10</span>:<span seconds>00</span></p><button class="auc__reset" reset>Сброс</button></div><div class="auc__timer-controllers"><button class="auc__timer-btn" plus-one-min>+1</button><button class="auc__timer-btn" plus-two-min>+2</button><button class="auc__timer-btn" ten-min>=10</button><button class="auc__timer-btn" minus-one-min>-1</button></div></div></div></div></main><footer></footer><script src="js/main.min.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>ゴミオークション / Trash Auction</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="ie=edge" http-equiv="x-ua-compatible">
+  <meta name="description" content="Streamer auction board — Japanese &amp; English (OBS-friendly)">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.min.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="header__title">
+      <a href="index.html"><span class="header__ja">ゴミ</span>オークション<span class="header__en">Trash Auction</span></a>
+    </h1>
+  </header>
+  <main class="auc">
+    <div class="auc__inner">
+      <div class="auc__left">
+        <div class="auc__controllers">
+          <button class="auc__clear" title="データを消去 / Clear storage" clear>
+            <svg class="auc__icon"><use xlink:href="img/sprite.svg#reset"></use></svg>
+          </button>
+          <div class="auc__edit-wrapper">
+            <button class="auc__edit" title="戻る / Undo" auc-back>
+              <svg class="auc__icon auc__icon--revert"><use xlink:href="img/sprite.svg#arrow"></use></svg>
+            </button>
+            <button class="auc__edit" title="進む / Redo" auc-forward>
+              <svg class="auc__icon"><use xlink:href="img/sprite.svg#arrow"></use></svg>
+            </button>
+          </div>
+        </div>
+        <div class="auc__lots-wrapper">
+          <div class="auc__item auc__item--first">
+            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
+            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
+            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
+            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+          </div>
+          <div class="auc__item auc__item--second">
+            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
+            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
+            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
+            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+          </div>
+          <div class="auc__item">
+            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
+            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
+            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
+            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+          </div>
+          <div class="auc__item">
+            <input class="auc__lot" type="text" title="ロット名 / Lot name" placeholder="名前 / Name">
+            <input class="auc__total-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="合計 / Total" placeholder="合計">
+            <input class="auc__current-sum" type="text" inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" title="入札額 / Bid" placeholder="入札">
+            <button class="auc__add-sum" add-sum title="加算 / Add bid"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+          </div>
+        </div>
+        <button class="auc__add-lot" add-lot title="ロットを追加 / Add lot"><svg class="auc__icon"><use xlink:href="img/sprite.svg#plus"></use></svg></button>
+      </div>
+      <div class="auc__right">
+        <p class="auc__total"><span class="auc__label-ja">バンク</span><span class="auc__label-en">Bank</span> <span total>0</span></p>
+        <div class="auc__timer-wrapper">
+          <div class="auc__timer">
+            <button class="auc__start" start title="開始 / 停止 — Start / Stop"></button>
+            <p class="auc__time" timer><span minutes>10</span>:<span seconds>00</span></p>
+            <button class="auc__reset" reset title="リセット / Reset"><span class="auc__label-ja">リセット</span><span class="auc__label-en">Reset</span></button>
+          </div>
+          <div class="auc__timer-controllers">
+            <button class="auc__timer-btn" plus-one-min title="+1 min">+1</button>
+            <button class="auc__timer-btn" plus-two-min title="+2 min">+2</button>
+            <button class="auc__timer-btn" ten-min title="=10 min">=10</button>
+            <button class="auc__timer-btn" minus-one-min title="-1 min">-1</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer></footer>
+  <script src="js/main.min.js"></script>
+</body>
+</html>
