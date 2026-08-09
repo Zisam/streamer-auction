@@ -103,16 +103,18 @@ const displayLots = (arr) => {
   }
 
   for (let i = 0; i < lotsItemDOMLength; i++) {
-    lotsItemDOM[i].childNodes[0].value = '';
-    lotsItemDOM[i].childNodes[1].value = '';
-    lotsItemDOM[i].childNodes[2].value = '';
-    lotsItemDOM[i].childNodes[3].removeAttribute('id');
+    const item = lotsItemDOM[i];
+    item.querySelector('.auc__lot').value = '';
+    item.querySelector('.auc__total-sum').value = '';
+    item.querySelector('.auc__current-sum').value = '';
+    item.querySelector('[add-sum]').removeAttribute('id');
   }
 
   for (let i = 0; i < ARR_LENGTH; i++) {
-    lotsItemDOM[i].childNodes[0].value = arr[i].name;
-    lotsItemDOM[i].childNodes[1].value = arr[i].totalBet;
-    lotsItemDOM[i].childNodes[3].setAttribute('id', arr[i].id);
+    const item = lotsItemDOM[i];
+    item.querySelector('.auc__lot').value = arr[i].name;
+    item.querySelector('.auc__total-sum').value = arr[i].totalBet;
+    item.querySelector('[add-sum]').setAttribute('id', arr[i].id);
   }
 
   TOTAL_DOM.innerText = '';
@@ -268,9 +270,10 @@ FORWARD_BTN.addEventListener('click', logForward);
 
 const eventListenerAdding = () => document.querySelectorAll('[add-sum]').forEach((btn) => {
   btn.addEventListener('click', () => {
-    const LOT_NAME_DOM = btn.parentElement.firstChild;
-    const LOT_CUR_SUM_DOM = btn.previousSibling;
-    const LOT_TOTAL_SUM_DOM = btn.parentElement.firstChild.nextSibling;
+    const item = btn.closest('.auc__item');
+    const LOT_NAME_DOM = item.querySelector('.auc__lot');
+    const LOT_TOTAL_SUM_DOM = item.querySelector('.auc__total-sum');
+    const LOT_CUR_SUM_DOM = item.querySelector('.auc__current-sum');
 
     if (!isNaN(parseFloat(LOT_CUR_SUM_DOM.value))) {
       if (!btn.hasAttribute('id')) {
