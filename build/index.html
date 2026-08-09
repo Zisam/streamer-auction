@@ -7,7 +7,7 @@
   <meta content="ie=edge" http-equiv="x-ua-compatible">
   <meta name="description" content="Streamer auction board — Japanese &amp; English (OBS-friendly)">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Shippori+Mincho:wght@400;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/auction.css?v=20260809a">
+  <link rel="stylesheet" href="css/auction.css?v=wheel1">
 </head>
 <body>
   <header class="header">
@@ -88,7 +88,7 @@
         </p>
         <p class="auc__timer-label">
           <span class="auc__label-ja">タイマー</span>
-          <span class="auc__label-en">Timer (not roulette)</span>
+          <span class="auc__label-en">Timer</span>
         </p>
         <div class="auc__timer-wrapper">
           <div class="auc__timer">
@@ -106,16 +106,38 @@
             <button class="auc__timer-btn" type="button" minus-one-min title="-1 min">-1</button>
           </div>
         </div>
+
+        <section class="wheel" aria-label="Roulette">
+          <div class="wheel__head">
+            <p class="wheel__title">
+              <span class="auc__label-ja">ルーレット</span>
+              <span class="auc__label-en">Roulette</span>
+            </p>
+            <label class="wheel__mode">
+              <input type="checkbox" wheel-weighted checked>
+              <span>入札比重 / Weighted by bids</span>
+            </label>
+          </div>
+          <div class="wheel__stage">
+            <div class="wheel__pointer" aria-hidden="true"></div>
+            <canvas class="wheel__canvas" wheel-canvas width="360" height="360"></canvas>
+          </div>
+          <p class="wheel__result" wheel-result>—</p>
+          <div class="wheel__actions">
+            <button class="wheel__spin" type="button" wheel-spin title="スピン / Spin">スピン / Spin</button>
+            <button class="wheel__refresh" type="button" wheel-refresh title="ロットから更新 / Rebuild from lots">更新 / Refresh</button>
+          </div>
+        </section>
+
         <ol class="auc__howto">
-          <li><strong>1.</strong> 名前を入力 / Enter name</li>
-          <li><strong>2.</strong> 右欄に金額 / Type bid amount</li>
-          <li><strong>3.</strong> <strong>+</strong> で合計＆バンクへ / Add to total &amp; bank</li>
-          <li><strong>4.</strong> 緑ボタン＝タイマー開始 / Green = start timer</li>
+          <li><strong>1.</strong> 名前＋金額 → <strong>+</strong> / Name + amount → +</li>
+          <li><strong>2.</strong> タイマーで締切 / Timer for deadline</li>
+          <li><strong>3.</strong> ルーレットで当選 / Spin roulette for winner</li>
         </ol>
       </div>
     </div>
   </main>
   <footer></footer>
-  <script src="js/main.min.js?v=20260809a"></script>
+  <script src="js/main.min.js?v=wheel1"></script>
 </body>
 </html>

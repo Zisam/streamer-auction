@@ -27,6 +27,23 @@ const LOTS_DOM = document.querySelector('.auc__lots-wrapper');
 const TOTAL_DOM = document.querySelector('[total]');
 const HELP_STATUS = document.querySelector('[help-status]');
 
+const WHEEL_CANVAS = document.querySelector('[wheel-canvas]');
+const WHEEL_RESULT = document.querySelector('[wheel-result]');
+const WHEEL_SPIN_BTN = document.querySelector('[wheel-spin]');
+const WHEEL_REFRESH_BTN = document.querySelector('[wheel-refresh]');
+const WHEEL_WEIGHTED = document.querySelector('[wheel-weighted]');
+const WHEEL_CTX = WHEEL_CANVAS ? WHEEL_CANVAS.getContext('2d') : null;
+
+const WHEEL_COLORS = [
+  '#6e1c2c', '#8a6528', '#1f4a32', '#3d2a4a',
+  '#7a3b1e', '#2a4a5c', '#5c1424', '#4a3a18'
+];
+
+let wheelSegments = [];
+let wheelRotationDeg = 0;
+let wheelSpinning = false;
+let wheelAnimFrame = 0;
+
 const lotRowTemplate = () => (
   `<div class="auc__item">
     <input class="auc__lot" type="text" title="名前 / Name" placeholder="名前 / Name" autocomplete="off">
@@ -60,7 +77,7 @@ const startTimer = (seconds) => {
     if (SECONDS_LEFT < 0) {
       clearInterval(countdown);
       START_STOP_BTN.classList.remove('auc__start--stop');
-      setHelp('タイマー終了', 'Timer finished');
+      setHelp('タイマー終了 → ルーレットへ', 'Timer done → spin the roulette');
       return;
     }
     displayTimer(SECONDS_LEFT);
@@ -139,6 +156,7 @@ const displayLots = (arr) => {
   const bank = arr.reduce((acc, el) => acc + (parseFloat(el.totalBet) || 0), 0);
   TOTAL_DOM.textContent = String(bank);
   checkLogBtnDisabling();
+  rebuildWheel();
 };
 
 const lotArrayFill = (name, lastBet) => {
@@ -185,6 +203,7 @@ const readLocalStorage = () => {
     displayLots(lotArray);
   } else {
     displayTimer(600);
+    rebuildWheel();
   }
 };
 
@@ -252,10 +271,188 @@ const applyBidFromRow = (item) => {
   setLog(lotArray);
   setLocalStorage(lotArray, logArray);
   displayLots(lotArray);
-  setHelp('加算しました', 'Bid added to total & bank');
+  setHelp('加算しました（ルーレット更新）', 'Bid added (roulette updated)');
 };
 
-// Event delegation — one listener for all + buttons
+/* —— Roulette —— */
+const getWheelLots = () => lotArray.filter((lot) => (lot.name || '').trim() || parseFloat(lot.totalBet) > 0);
+
+const buildWheelSegments = () => {
+  const lots = getWheelLots();
+  const weighted = !!(WHEEL_WEIGHTED && WHEEL_WEIGHTED.checked);
+  const totalWeight = lots.reduce((sum, lot) => {
+    const bid = parseFloat(lot.totalBet) || 0;
+    return sum + (weighted ? Math.max(bid, 0.0001) : 1);
+  }, 0);
+
+  let angle = -Math.PI / 2;
+  return lots.map((lot, index) => {
+    const bid = parseFloat(lot.totalBet) || 0;
+    const weight = weighted ? Math.max(bid, 0.0001) : 1;
+    const sweep = (weight / Math.max(totalWeight, 0.0001)) * Math.PI * 2;
+    const segment = {
+      id: lot.id,
+      name: (lot.name || '—').trim() || '—',
+      bid,
+      weight,
+      start: angle,
+      end: angle + sweep,
+      mid: angle + sweep / 2,
+      color: WHEEL_COLORS[index % WHEEL_COLORS.length]
+    };
+    angle += sweep;
+    return segment;
+  });
+};
+
+const drawWheel = (rotationDeg = wheelRotationDeg) => {
+  if (!WHEEL_CTX || !WHEEL_CANVAS) return;
+  const size = WHEEL_CANVAS.width;
+  const radius = size / 2;
+  const ctx = WHEEL_CTX;
+
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.translate(radius, radius);
+  ctx.rotate((rotationDeg * Math.PI) / 180);
+
+  if (!wheelSegments.length) {
+    ctx.beginPath();
+    ctx.fillStyle = '#1a1014';
+    ctx.arc(0, 0, radius - 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#a89888';
+    ctx.font = '22px "Shippori Mincho", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ロットなし', 0, -8);
+    ctx.font = '16px "Cormorant Garamond", serif';
+    ctx.fillText('No lots yet', 0, 18);
+    ctx.restore();
+    return;
+  }
+
+  wheelSegments.forEach((seg) => {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, radius - 2, seg.start, seg.end);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(240, 215, 138, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    const labelAngle = seg.mid;
+    const labelRadius = radius * 0.62;
+    ctx.save();
+    ctx.rotate(labelAngle);
+    ctx.translate(labelRadius, 0);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#f0e6d8';
+    ctx.font = 'bold 16px "Shippori Mincho", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const label = seg.name.length > 8 ? seg.name.slice(0, 8) + '…' : seg.name;
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.14, 0, Math.PI * 2);
+  ctx.fillStyle = '#0b090a';
+  ctx.fill();
+  ctx.strokeStyle = '#f0d78a';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.restore();
+};
+
+const setWheelResult = (text, isWin) => {
+  if (!WHEEL_RESULT) return;
+  WHEEL_RESULT.textContent = text;
+  WHEEL_RESULT.classList.toggle('wheel__result--win', !!isWin);
+};
+
+const rebuildWheel = () => {
+  if (wheelSpinning) return;
+  wheelSegments = buildWheelSegments();
+  drawWheel(wheelRotationDeg);
+  if (!wheelSegments.length) {
+    setWheelResult('—');
+  } else if (!WHEEL_RESULT.classList.contains('wheel__result--win')) {
+    setWheelResult(`${wheelSegments.length} sectors`);
+  }
+};
+
+const pickWeightedIndex = () => {
+  const total = wheelSegments.reduce((sum, seg) => sum + seg.weight, 0);
+  let cursor = Math.random() * total;
+  for (let i = 0; i < wheelSegments.length; i++) {
+    cursor -= wheelSegments[i].weight;
+    if (cursor <= 0) return i;
+  }
+  return wheelSegments.length - 1;
+};
+
+const spinWheel = () => {
+  if (wheelSpinning) return;
+  wheelSegments = buildWheelSegments();
+  if (!wheelSegments.length) {
+    setHelp('先にロットを追加してからスピン', 'Add lots before spinning');
+    setWheelResult('No lots');
+    drawWheel(wheelRotationDeg);
+    return;
+  }
+
+  const winnerIndex = pickWeightedIndex();
+  const winner = wheelSegments[winnerIndex];
+  // Pointer is at top (-90deg). Segment mid in canvas space; convert to degrees.
+  const midDeg = (winner.mid * 180) / Math.PI;
+  // We want midDeg + rotation ≡ -90 (top) mod 360
+  // rotation ≡ -90 - midDeg
+  const targetMod = ((-90 - midDeg) % 360 + 360) % 360;
+  const currentMod = ((wheelRotationDeg % 360) + 360) % 360;
+  let delta = targetMod - currentMod;
+  if (delta < 0) delta += 360;
+  const extraTurns = 5 + Math.floor(Math.random() * 3);
+  const finalRotation = wheelRotationDeg + extraTurns * 360 + delta;
+
+  wheelSpinning = true;
+  if (WHEEL_SPIN_BTN) WHEEL_SPIN_BTN.disabled = true;
+  if (WHEEL_REFRESH_BTN) WHEEL_REFRESH_BTN.disabled = true;
+  setWheelResult('…');
+  setHelp('ルーレット回転中', 'Roulette spinning');
+
+  const start = performance.now();
+  const duration = 4500;
+  const from = wheelRotationDeg;
+  const change = finalRotation - from;
+
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    wheelRotationDeg = from + change * easeOutCubic(t);
+    drawWheel(wheelRotationDeg);
+    if (t < 1) {
+      wheelAnimFrame = requestAnimationFrame(tick);
+      return;
+    }
+    wheelRotationDeg = finalRotation;
+    drawWheel(wheelRotationDeg);
+    wheelSpinning = false;
+    if (WHEEL_SPIN_BTN) WHEEL_SPIN_BTN.disabled = false;
+    if (WHEEL_REFRESH_BTN) WHEEL_REFRESH_BTN.disabled = false;
+    setWheelResult(`★ ${winner.name} (${winner.bid})`, true);
+    setHelp(`当選: ${winner.name}`, `Winner: ${winner.name}`);
+  };
+
+  cancelAnimationFrame(wheelAnimFrame);
+  wheelAnimFrame = requestAnimationFrame(tick);
+};
+
 LOTS_DOM.addEventListener('click', (event) => {
   const btn = event.target.closest('[add-sum]');
   if (!btn || !LOTS_DOM.contains(btn)) return;
@@ -314,7 +511,24 @@ CLEAR_LOTS_BTN.addEventListener('click', () => {
 BACK_BTN.addEventListener('click', logBack);
 FORWARD_BTN.addEventListener('click', logForward);
 
+if (WHEEL_SPIN_BTN) WHEEL_SPIN_BTN.addEventListener('click', spinWheel);
+if (WHEEL_REFRESH_BTN) {
+  WHEEL_REFRESH_BTN.addEventListener('click', () => {
+    if (wheelSpinning) return;
+    WHEEL_RESULT.classList.remove('wheel__result--win');
+    rebuildWheel();
+    setHelp('ルーレットを更新', 'Roulette rebuilt from lots');
+  });
+}
+if (WHEEL_WEIGHTED) {
+  WHEEL_WEIGHTED.addEventListener('change', () => {
+    if (wheelSpinning) return;
+    WHEEL_RESULT.classList.remove('wheel__result--win');
+    rebuildWheel();
+  });
+}
+
 setLog(lotArray);
 readLocalStorage();
 checkLogBtnDisabling();
-setHelp('名前 → 金額 → + でバンクに加算', 'Name → amount → + adds to bank');
+setHelp('名前 → 金額 → +、その後スピン', 'Name → amount → +, then spin');
