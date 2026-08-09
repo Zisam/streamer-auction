@@ -4,14 +4,29 @@ $media-lg: 61.9375em;
 $media-md: 47.9375em;
 $media-sm: 35.9375em;
 $media-xs: 30em;
-// Colors
-$color-primary-light: #fff;
-$color-primary-dark: #292929;
-$color-input: #c7c6c6;
-$color-input-first: #ffd700;
-$color-input-second: #d4d4d4;
-$color-start: #28b449;
-$color-reset: #e91818;
-$color-bg: #009688;
+
+// Gothic luxury palette
+$color-ink: #0b090a;
+$color-panel: #141012;
+$color-panel-edge: #2a1f24;
+$color-bone: #ebe4d8;
+$color-muted: #9a8f84;
+$color-gold: #c9a45c;
+$color-gold-bright: #e4c878;
+$color-gold-deep: #8a6b32;
+$color-wine: #6e1c2c;
+$color-wine-deep: #3d1018;
+$color-crimson: #9b2d3d;
+$color-primary-light: $color-bone;
+$color-primary-dark: $color-ink;
+$color-input: #1c1618;
+$color-input-first: #2a2210;
+$color-input-second: #1a1a1e;
+$color-start: #1f4a32;
+$color-reset: $color-wine;
+$color-bg: $color-ink;
+
 // Fonts
-$font-txt: 'Noto Sans JP', 'Roboto', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+$font-display: 'Cinzel', 'Shippori Mincho', serif;
+$font-txt: 'Shippori Mincho', 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+$font-ui: 'Cormorant Garamond', 'Shippori Mincho', serif;

@@ -8,14 +8,12 @@
 
 a {
   display: inline-block;
-
   cursor: pointer;
   text-decoration: none;
 }
 
 img {
   display: block;
-
   width: 100%;
   height: auto;
 }
@@ -37,7 +35,6 @@ h4,
 h5,
 h6 {
   font-weight: 400;
-
   margin: 0;
   padding: 0;
 }
@@ -47,12 +44,8 @@ p {
 }
 
 input {
-  @include outline;
-
   font: inherit;
-
   letter-spacing: inherit;
-
   color: inherit;
   border: none;
   outline: none;
@@ -61,17 +54,13 @@ input {
 
 input[type='button'] {
   padding: 0;
-
   cursor: pointer;
 }
 
 button {
   font: inherit;
-
   padding: 0;
-
   cursor: pointer;
-
   border: none;
   outline: none;
   background: none;
@@ -86,7 +75,6 @@ html {
   }
 
   font-size: 62.5%;
-
   scroll-behavior: smooth;
 }
 
@@ -94,14 +82,11 @@ body {
   font-family: $font-txt;
   font-size: 1.6rem;
   line-height: 1.5;
-
   overflow: hidden;
-
   margin: 0;
-
-  letter-spacing: .02em;
-
-  color: $color-primary-dark;
+  letter-spacing: .03em;
+  color: $color-bone;
+  background: $color-ink;
 }
 
 .container {

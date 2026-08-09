@@ -1,45 +1,70 @@
 @mixin auc-input {
-  font-size: 3.5rem;
+  font-family: $font-txt;
+  font-size: 3.2rem;
 
-  max-height: 1.2em;
-  margin-right: 1.5rem;
-  padding: 0 .2em;
+  max-height: 1.35em;
+  margin-right: 1.2rem;
+  padding: .15em .45em;
 
-  transition: .1s linear;
+  color: $color-bone;
+  border: 1px solid rgba($color-gold, .35);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba($color-gold, .06), transparent 40%),
+    $color-input;
+  box-shadow:
+    inset 0 1px 0 rgba($color-gold, .12),
+    0 0 0 1px rgba($color-ink, .8);
+  transition: border-color .25s ease, box-shadow .25s ease, background-color .25s ease;
 
-  border: 3px solid $color-primary-dark;
-  border-radius: .25em;
-  background-color: $color-input;
-  box-shadow: 3px 3px 0 $color-primary-dark;
+  &::placeholder {
+    color: rgba($color-muted, .7);
+    font-size: .55em;
+    letter-spacing: .04em;
+  }
 
   &:focus {
-    background-color: $color-primary-light;
+    border-color: $color-gold;
+    background-color: lighten($color-input, 3%);
+    box-shadow:
+      inset 0 1px 0 rgba($color-gold, .2),
+      0 0 0 1px rgba($color-gold, .45);
   }
 }
 
 @mixin auc-btn {
-  font-size: 2rem;
+  font-family: $font-display;
+  font-size: 1.6rem;
+  letter-spacing: .12em;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: .2em;
+  padding: .45em .7em;
 
-  transition: .1s linear;
-
-  color: $color-primary-light;
-  border-radius: .25em;
-  background-color: $color-primary-dark;
-  box-shadow: 0 5px darken($color-primary-dark, 10);
+  color: $color-gold-bright;
+  border: 1px solid rgba($color-gold, .45);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba($color-gold, .18), transparent 55%),
+    $color-panel;
+  box-shadow:
+    inset 0 1px 0 rgba($color-gold, .2),
+    0 4px 0 $color-ink;
+  transition: transform .15s ease, border-color .2s ease, background-color .2s ease, color .2s ease;
 
   &:hover {
-    background-color: darken($color-primary-dark, 7);
+    color: $color-ink;
+    border-color: $color-gold-bright;
+    background:
+      linear-gradient(180deg, $color-gold-bright, $color-gold);
   }
 
   &:active {
     transform: translateY(2px);
-
-    box-shadow: none;
+    box-shadow:
+      inset 0 1px 0 rgba($color-gold, .15),
+      0 1px 0 $color-ink;
   }
 }

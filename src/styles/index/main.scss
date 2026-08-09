@@ -1,12 +1,36 @@
 .auc {
+  position: relative;
   width: 100%;
   height: 100%;
   min-height: 100vh;
-  padding: 5rem .5rem 0 .5rem;
+  padding: 6.5rem 1.2rem 1.2rem;
 
-  background: url('../img/bg.png'), $color-bg;
+  background-color: $color-ink;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba($color-wine, .35), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba($color-gold-deep, .12), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 80%, rgba($color-wine-deep, .4), transparent 45%),
+    linear-gradient(180deg, #120e10 0%, $color-ink 45%, #080607 100%);
+  overflow: hidden;
 
-  background-blend-mode: multiply;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .22;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath fill='none' stroke='%23c9a45c' stroke-opacity='0.35' stroke-width='0.6' d='M40 8 L48 32 L72 40 L48 48 L40 72 L32 48 L8 40 L32 32 Z'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 120px rgba($color-ink, .85);
+  }
 }
 
 .auc__inner {
@@ -14,11 +38,12 @@
     flex-direction: column-reverse;
   }
 
+  position: relative;
+  z-index: 1;
   display: flex;
   flex: 0 1;
-
-  height: calc(100vh - 5rem);
-  padding: 2rem .5rem 0 0;
+  height: calc(100vh - 6.5rem);
+  padding: 1.5rem .5rem 0 0;
 }
 
 .auc__left {
@@ -30,7 +55,6 @@
   overflow-y: auto;
   flex: 1 1;
   flex-direction: column;
-
   max-height: 100%;
   margin-right: 2rem;
   padding: .5rem 0 0 .5rem;
@@ -44,9 +68,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   max-width: calc(100% - 7rem);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
 }
 
 .auc__edit-wrapper {
@@ -55,8 +78,7 @@
 
 .auc__edit {
   @include auc-btn;
-
-  padding: .3em;
+  padding: .55em;
 
   &:not(:last-child) {
     margin-right: 1rem;
@@ -64,36 +86,42 @@
 
   &--disabled {
     cursor: not-allowed;
+    color: rgba($color-muted, .45);
+    border-color: rgba($color-muted, .25);
+    background: $color-panel;
+    box-shadow: none;
+    opacity: .55;
 
-    background-color: darken($color-primary-light, 50);
-    box-shadow: 0 5px darken($color-primary-light, 80);
+    &:hover {
+      color: rgba($color-muted, .45);
+      border-color: rgba($color-muted, .25);
+      background: $color-panel;
+    }
 
     &:active {
       transform: none;
-
-      box-shadow: 0 5px darken($color-primary-light, 80);
-    }
-
-    &:hover {
-      background-color: darken($color-primary-light, 50);
     }
 
     .auc__icon {
-      fill: darken($color-primary-light, 80);
+      fill: rgba($color-muted, .45);
     }
   }
 }
 
 .auc__clear {
   @include auc-btn;
-
-  padding: .3em;
-
-  background-color: $color-reset;
-  box-shadow: 0 5px darken($color-reset, 10);
+  padding: .55em;
+  color: #f0d4d8;
+  border-color: rgba($color-crimson, .55);
+  background:
+    linear-gradient(180deg, rgba($color-crimson, .35), transparent 60%),
+    $color-wine-deep;
 
   &:hover {
-    background-color: darken($color-reset, 7);
+    color: $color-bone;
+    border-color: lighten($color-crimson, 8%);
+    background:
+      linear-gradient(180deg, $color-crimson, $color-wine-deep);
   }
 }
 
@@ -108,23 +136,28 @@
 .auc__item {
   display: flex;
   align-items: center;
-
   width: 100%;
-  margin-bottom: .8em;
+  margin-bottom: 1em;
+  animation: lot-rise .45s ease both;
 }
 
 .auc__item--first {
   .auc__lot,
   .auc__total-sum,
   .auc__current-sum {
-    border: 3px outset $color-input-first;
-    background-color: $color-input-first;
-    box-shadow: 0 0 10px $color-input-first, 3px 3px 0 $color-primary-dark;
+    border-color: rgba($color-gold-bright, .7);
+    background:
+      linear-gradient(180deg, rgba($color-gold, .22), transparent 50%),
+      #241c0c;
+    box-shadow:
+      inset 0 1px 0 rgba($color-gold-bright, .25),
+      0 0 0 1px rgba($color-gold-deep, .35);
 
     &:focus {
-      @include outline;
-
-      background-color: $color-input-first;
+      border-color: $color-gold-bright;
+      background:
+        linear-gradient(180deg, rgba($color-gold, .28), transparent 50%),
+        #2c220e;
     }
   }
 }
@@ -133,14 +166,16 @@
   .auc__lot,
   .auc__total-sum,
   .auc__current-sum {
-    border: 3px outset $color-input-second;
-    background-color: $color-input-second;
-    box-shadow: 0 0 10px $color-input-second, 3px 3px 0 $color-primary-dark;
+    border-color: rgba(#c0c4cc, .45);
+    background:
+      linear-gradient(180deg, rgba(#dfe3ea, .12), transparent 50%),
+      #1a1c20;
+    box-shadow:
+      inset 0 1px 0 rgba(#fff, .08),
+      0 0 0 1px rgba(#8a909a, .25);
 
     &:focus {
-      @include outline;
-
-      background-color: $color-input-second;
+      border-color: #d0d4dc;
     }
   }
 }
@@ -150,13 +185,11 @@
 .auc__current-sum {
   @include auc-input;
   @include media-tablet-ls {
-    font-size: 2.9rem;
-
+    font-size: 2.7rem;
     max-height: 1.5em;
   }
   @include media-smartphone-ls {
-    font-size: 2.4rem;
-
+    font-size: 2.3rem;
     max-height: 2em;
   }
   @include media-smartphone-pt {
@@ -170,10 +203,8 @@
   }
 
   flex: 1 0;
-
   width: 100%;
-  min-width: 30rem;
-
+  min-width: 28rem;
   text-align: right;
 }
 
@@ -183,6 +214,8 @@
   }
 
   max-width: 15rem;
+  text-align: center;
+  color: $color-gold-bright;
 }
 
 .auc__current-sum {
@@ -191,24 +224,22 @@
   }
 
   max-width: 12rem;
+  text-align: center;
 }
 
 .auc__add-sum {
   @include auc-btn;
-
   min-width: 4.5rem;
   max-width: 5%;
   min-height: 4.5rem;
-  padding: .1em;
-
-  border-radius: 100%;
+  padding: .2em;
+  border-radius: 0;
 }
 
 .auc__icon {
   width: 2rem;
   height: 2rem;
-
-  fill: $color-primary-light;
+  fill: currentColor;
 
   &--revert {
     transform: scale(-1, 1);
@@ -223,23 +254,40 @@
 
   max-width: calc(100% - 7rem);
   margin-bottom: 1rem;
-  padding: .3em .2em;
+  padding: .45em .2em;
 }
 
 .auc__right {
   display: flex;
   flex-direction: column;
-
   width: 100%;
-  max-width: 40rem;
-  margin: 0 auto;
-  margin-bottom: 3.5rem;
+  max-width: 42rem;
+  margin: 0 auto 3rem;
+  padding: 1.6rem 1.4rem 1.8rem;
+  border: 1px solid rgba($color-gold, .35);
+  background:
+    linear-gradient(165deg, rgba($color-wine-deep, .55), rgba($color-panel, .9) 40%, rgba($color-ink, .95));
+  box-shadow:
+    inset 0 1px 0 rgba($color-gold, .15),
+    0 18px 40px rgba($color-ink, .55);
 }
 
 .auc__total {
-  font-size: 2rem;
+  font-family: $font-display;
+  font-size: 2.1rem;
+  letter-spacing: .14em;
+  color: $color-gold-bright;
+  margin-bottom: 1.4rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba($color-gold, .25);
+  text-align: center;
 
-  color: $color-input-second;
+  [total] {
+    font-family: $font-ui;
+    font-size: 1.35em;
+    margin-left: .2em;
+    color: $color-bone;
+  }
 }
 
 .auc__label-ja {
@@ -247,12 +295,14 @@
 }
 
 .auc__label-en {
+  font-family: $font-ui;
   font-size: .55em;
-  font-weight: 400;
-  margin-right: .5em;
-  opacity: .75;
+  font-weight: 500;
+  margin-right: .55em;
+  opacity: .8;
   text-transform: uppercase;
-  letter-spacing: .04em;
+  letter-spacing: .18em;
+  color: $color-muted;
 }
 
 .auc__reset {
@@ -261,12 +311,14 @@
 
   .auc__label-ja {
     margin-right: 0;
-    font-size: 1.35rem;
+    font-size: 1.2rem;
+    letter-spacing: .08em;
   }
 
   .auc__label-en {
     margin-right: 0;
-    font-size: .85rem;
+    font-size: .9rem;
+    letter-spacing: .16em;
   }
 }
 
@@ -274,81 +326,125 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
 
 .auc__start,
 .auc__reset {
   @include auc-btn;
-
-  font-size: 1.5rem;
-
-  min-width: 7rem;
-  min-height: 7rem;
-
-  text-transform: uppercase;
-
-  border-radius: 100%;
+  font-size: 1.35rem;
+  min-width: 7.2rem;
+  min-height: 7.2rem;
+  text-transform: none;
+  border-radius: 0;
 }
 
 .auc__time {
-  font-size: 7.5rem;
-
+  font-family: $font-display;
+  font-size: 6.8rem;
+  font-variant-numeric: tabular-nums;
   display: flex;
   align-items: baseline;
-
-  margin: 0 1rem;
-
-  color: $color-primary-light;
-  text-shadow: 0 3px $color-primary-dark;
+  margin: 0 .6rem;
+  letter-spacing: .06em;
+  color: $color-bone;
+  text-shadow: 0 2px 0 rgba($color-ink, .8);
 
   span[mseconds] {
-    font-size: 4rem;
+    font-size: 3.4rem;
   }
 }
 
 .auc__start {
-  background-color: $color-start;
-  box-shadow: 0 5px darken($color-start, 10);
+  color: #d8efe0;
+  border-color: rgba(#5f9f78, .55);
+  background:
+    linear-gradient(180deg, rgba(#3d7a55, .45), transparent 55%),
+    #14261c;
 
   &:hover {
-    background-color: darken($color-start, 7);
+    color: $color-ink;
+    border-color: #8fc9a4;
+    background: linear-gradient(180deg, #b7dfc6, #5f9f78);
   }
 
   &::after {
-    width: 100%;
-    height: 100%;
-
     content: '開始';
+    letter-spacing: .18em;
   }
 
   &--stop {
-    &::after {
-      width: 100%;
-      height: 100%;
+    color: #f3d6b8;
+    border-color: rgba($color-gold, .55);
+    background:
+      linear-gradient(180deg, rgba($color-gold, .28), transparent 55%),
+      #2a1c10;
+    animation: pulse-stop 1.8s ease-in-out infinite;
 
+    &::after {
       content: '停止';
+    }
+
+    &:hover {
+      color: $color-ink;
+      background: linear-gradient(180deg, $color-gold-bright, $color-gold);
     }
   }
 }
 
 .auc__reset {
-  background-color: $color-reset;
-  box-shadow: 0 5px darken($color-reset, 10);
+  color: #f0d4d8;
+  border-color: rgba($color-crimson, .55);
+  background:
+    linear-gradient(180deg, rgba($color-crimson, .35), transparent 55%),
+    $color-wine-deep;
 
   &:hover {
-    background-color: darken($color-reset, 7);
+    color: $color-bone;
+    border-color: lighten($color-crimson, 10%);
+    background: linear-gradient(180deg, $color-crimson, $color-wine-deep);
   }
 }
 
 .auc__timer-controllers {
   display: flex;
   justify-content: space-between;
+  gap: .6rem;
 }
 
 .auc__timer-btn {
   @include auc-btn;
+  flex: 1;
+  width: auto;
+  font-family: $font-ui;
+  font-size: 2rem;
+  letter-spacing: .04em;
+}
 
-  width: 22%;
+@keyframes lot-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-stop {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba($color-gold, .2),
+      0 4px 0 $color-ink;
+  }
+
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba($color-gold, .35),
+      0 4px 0 $color-ink,
+      0 0 0 1px rgba($color-gold, .35);
+  }
 }
