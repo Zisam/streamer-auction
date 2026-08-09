@@ -1,5 +1,5 @@
 {
-  "name": "gomi-auction",
+  "name": "streamer-auction",
   "version": "1.1.0",
   "description": "オークション / Auction — bilingual JP/EN streamer auction board (fork of pomojnyj-aukcion)",
   "main": "gulpfile.js",

@@ -6,7 +6,7 @@ Bilingual JP / EN overlay for live auctions — works as an OBS Browser Source o
 
 ## Live
 
-https://zisam.github.io/gomi-auction/
+https://zisam.github.io/streamer-auction/
 
 ## Features
 
