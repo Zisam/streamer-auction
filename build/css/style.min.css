@@ -48,6 +48,10 @@ body {
   letter-spacing: 0.03em;
   color: var(--bone);
   background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
 }
 
 a {
@@ -93,13 +97,11 @@ input {
 
 /* —— Header —— */
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   z-index: 10;
+  flex: 0 0 auto;
   width: 100%;
-  min-height: 7.2rem;
-  padding: 1rem 1.5rem 1.4rem;
+  padding: 1.1rem 1.5rem 1.3rem;
   text-align: center;
   background: linear-gradient(180deg, #3a101c 0%, #1a0a10 100%);
   border-bottom: 1px solid rgba(212, 176, 106, 0.45);
@@ -165,8 +167,10 @@ input {
 /* —— Stage —— */
 .auc {
   position: relative;
-  min-height: 100vh;
-  padding: 9rem 2rem 2rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  padding: 1.6rem 2rem 2rem;
   overflow: hidden;
   background-color: var(--ink);
   background-image:
@@ -204,7 +208,7 @@ input {
   grid-template-columns: minmax(0, 1fr) minmax(34rem, 42rem);
   gap: 2.4rem;
   align-items: start;
-  height: calc(100vh - 11rem);
+  height: 100%;
 }
 
 @media (max-width: 74.9375em) {
