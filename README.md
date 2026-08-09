@@ -1,4 +1,4 @@
-# ゴミオークション / Trash Auction
+# オークション / Auction
 
 Fork of [spoonya/pomojnyj-aukcion](https://github.com/spoonya/pomojnyj-aukcion) for Japanese streamers with an international (EN) audience.
 
@@ -6,7 +6,7 @@ Bilingual JP / EN overlay for live auctions — works as an OBS Browser Source o
 
 ## Live
 
-After Pages is enabled: `https://<user>.github.io/gomi-auction/`
+https://zisam.github.io/gomi-auction/
 
 ## Features
 
