@@ -1,6 +1,18 @@
-/* eslint-disable curly */
-/* eslint-disable radix */
-/* eslint-disable indent */
+import {
+  adjustTimer,
+  applyBidToLot,
+  buildWheelSegments,
+  calcBank,
+  cloneLots,
+  createLot,
+  formatTimer,
+  getWheelLots,
+  isValidBid,
+  pickWeightedIndex,
+  sortLotsByTotal,
+  spinTargetRotation
+} from './auction-core.mjs';
+
 let countdown;
 let secondsGlobal = 600;
 let lotsId = 0;
@@ -85,38 +97,30 @@ const startTimer = (seconds) => {
 };
 
 const displayTimer = (seconds) => {
-  secondsGlobal = Math.max(0, seconds);
+  const formatted = formatTimer(seconds);
+  secondsGlobal = formatted.total;
   window.localStorage.setItem('timer', secondsGlobal);
-  const MIN = Math.floor(secondsGlobal / 60);
-  const SEC = secondsGlobal % 60;
-  MIN_DOM.textContent = MIN < 10 ? '0' + MIN : String(MIN);
-  SEC_DOM.textContent = SEC < 10 ? '0' + SEC : String(SEC);
+  MIN_DOM.textContent = formatted.minutes;
+  SEC_DOM.textContent = formatted.seconds;
 };
 
 const setTimer = (time = 0) => {
   if (!START_STOP_BTN.classList.contains('auc__start--stop') || !countdown) {
-    secondsGlobal += time;
-    displayTimer(secondsGlobal);
+    displayTimer(adjustTimer(secondsGlobal, time));
   } else {
-    secondsGlobal += time;
     clearInterval(countdown);
-    startTimer(secondsGlobal);
+    startTimer(adjustTimer(secondsGlobal, time));
   }
 };
 
 const resetTimer = () => {
   START_STOP_BTN.classList.remove('auc__start--stop');
-  secondsGlobal = 0;
   clearInterval(countdown);
-  displayTimer(secondsGlobal);
+  displayTimer(0);
 };
 
 const addLot = () => {
   LOTS_DOM.insertAdjacentHTML('beforeend', lotRowTemplate());
-};
-
-const sortLots = (arr) => {
-  arr.sort((a, b) => b.totalBet - a.totalBet);
 };
 
 const displayLots = (arr) => {
@@ -132,15 +136,10 @@ const displayLots = (arr) => {
 
   for (let i = 0; i < lotsItemDOMLength; i++) {
     const item = lotsItemDOM[i];
-    const nameInput = item.querySelector('.auc__lot');
-    const totalInput = item.querySelector('.auc__total-sum');
-    const bidInput = item.querySelector('.auc__current-sum');
-    const addBtn = item.querySelector('[add-sum]');
-
-    nameInput.value = '';
-    totalInput.value = '';
-    bidInput.value = '';
-    addBtn.removeAttribute('data-lot-id');
+    item.querySelector('.auc__lot').value = '';
+    item.querySelector('.auc__total-sum').value = '';
+    item.querySelector('.auc__current-sum').value = '';
+    item.querySelector('[add-sum]').removeAttribute('data-lot-id');
     item.classList.remove('auc__item--first', 'auc__item--second');
   }
 
@@ -153,29 +152,19 @@ const displayLots = (arr) => {
     if (i === 1) item.classList.add('auc__item--second');
   }
 
-  const bank = arr.reduce((acc, el) => acc + (parseFloat(el.totalBet) || 0), 0);
-  TOTAL_DOM.textContent = String(bank);
+  TOTAL_DOM.textContent = String(calcBank(arr));
   checkLogBtnDisabling();
   rebuildWheel();
 };
 
 const lotArrayFill = (name, lastBet) => {
-  const amount = parseFloat(lastBet);
-  lotArray.push({
-    id: lotsId++,
-    name: name || '—',
-    totalBet: amount,
-    lastBet: amount
-  });
+  lotArray.push(createLot({ id: lotsId++, name, amount: lastBet }));
 };
 
 const lotArrayEdit = (idEd, name, lastBet) => {
-  const CURRENT_LOT = lotArray.find((el) => Number(el.id) === Number(idEd));
-  if (!CURRENT_LOT) return;
-  const amount = parseFloat(lastBet);
-  CURRENT_LOT.name = name || CURRENT_LOT.name || '—';
-  CURRENT_LOT.lastBet = amount;
-  CURRENT_LOT.totalBet = (parseFloat(CURRENT_LOT.totalBet) || 0) + amount;
+  const index = lotArray.findIndex((el) => Number(el.id) === Number(idEd));
+  if (index < 0) return;
+  lotArray[index] = applyBidToLot(lotArray[index], { name, amount: lastBet });
 };
 
 const setLocalStorage = (lotArr, logArr) => {
@@ -199,7 +188,6 @@ const readLocalStorage = () => {
     const savedTimer = JSON.parse(window.localStorage.getItem('timer'));
     secondsGlobal = typeof savedTimer === 'number' ? savedTimer : 600;
     displayTimer(secondsGlobal > 0 ? secondsGlobal : 600);
-
     displayLots(lotArray);
   } else {
     displayTimer(600);
@@ -208,13 +196,13 @@ const readLocalStorage = () => {
 };
 
 const setLog = (arr) => {
-  logArray.push(arr.map((lot) => ({ ...lot })));
+  logArray.push(cloneLots(arr));
   logArrayId = logArray.length - 1;
 };
 
 const logBack = () => {
   if (logArrayId > 0) {
-    lotArray = logArray[--logArrayId].map((lot) => ({ ...lot }));
+    lotArray = cloneLots(logArray[--logArrayId]);
     setLocalStorage(lotArray, logArray);
     displayLots(lotArray);
   }
@@ -222,7 +210,7 @@ const logBack = () => {
 
 const logForward = () => {
   if (logArrayId < logArray.length - 1) {
-    lotArray = logArray[++logArrayId].map((lot) => ({ ...lot }));
+    lotArray = cloneLots(logArray[++logArrayId]);
     setLocalStorage(lotArray, logArray);
     displayLots(lotArray);
   }
@@ -252,9 +240,8 @@ const applyBidFromRow = (item) => {
   const nameInput = item.querySelector('.auc__lot');
   const bidInput = item.querySelector('.auc__current-sum');
   const addBtn = item.querySelector('[add-sum]');
-  const amount = parseFloat(bidInput.value);
 
-  if (isNaN(amount) || amount <= 0) {
+  if (!isValidBid(bidInput.value)) {
     flashField(bidInput);
     setHelp('右の欄に金額を入れて + を押す', 'Type an amount in the right field, then press +');
     return;
@@ -262,47 +249,16 @@ const applyBidFromRow = (item) => {
 
   const lotId = addBtn.getAttribute('data-lot-id');
   if (lotId === null) {
-    lotArrayFill(nameInput.value.trim(), amount);
+    lotArrayFill(nameInput.value.trim(), bidInput.value);
   } else {
-    lotArrayEdit(lotId, nameInput.value.trim(), amount);
+    lotArrayEdit(lotId, nameInput.value.trim(), bidInput.value);
   }
 
-  sortLots(lotArray);
+  lotArray = sortLotsByTotal(lotArray);
   setLog(lotArray);
   setLocalStorage(lotArray, logArray);
   displayLots(lotArray);
   setHelp('加算しました（ルーレット更新）', 'Bid added (roulette updated)');
-};
-
-/* —— Roulette —— */
-const getWheelLots = () => lotArray.filter((lot) => (lot.name || '').trim() || parseFloat(lot.totalBet) > 0);
-
-const buildWheelSegments = () => {
-  const lots = getWheelLots();
-  const weighted = !!(WHEEL_WEIGHTED && WHEEL_WEIGHTED.checked);
-  const totalWeight = lots.reduce((sum, lot) => {
-    const bid = parseFloat(lot.totalBet) || 0;
-    return sum + (weighted ? Math.max(bid, 0.0001) : 1);
-  }, 0);
-
-  let angle = -Math.PI / 2;
-  return lots.map((lot, index) => {
-    const bid = parseFloat(lot.totalBet) || 0;
-    const weight = weighted ? Math.max(bid, 0.0001) : 1;
-    const sweep = (weight / Math.max(totalWeight, 0.0001)) * Math.PI * 2;
-    const segment = {
-      id: lot.id,
-      name: (lot.name || '—').trim() || '—',
-      bid,
-      weight,
-      start: angle,
-      end: angle + sweep,
-      mid: angle + sweep / 2,
-      color: WHEEL_COLORS[index % WHEEL_COLORS.length]
-    };
-    angle += sweep;
-    return segment;
-  });
 };
 
 const drawWheel = (rotationDeg = wheelRotationDeg) => {
@@ -377,7 +333,11 @@ const setWheelResult = (text, isWin) => {
 
 const rebuildWheel = () => {
   if (wheelSpinning) return;
-  wheelSegments = buildWheelSegments();
+  const weighted = !!(WHEEL_WEIGHTED && WHEEL_WEIGHTED.checked);
+  wheelSegments = buildWheelSegments(getWheelLots(lotArray), {
+    weighted,
+    colors: WHEEL_COLORS
+  });
   drawWheel(wheelRotationDeg);
   if (!wheelSegments.length) {
     setWheelResult('—');
@@ -386,19 +346,13 @@ const rebuildWheel = () => {
   }
 };
 
-const pickWeightedIndex = () => {
-  const total = wheelSegments.reduce((sum, seg) => sum + seg.weight, 0);
-  let cursor = Math.random() * total;
-  for (let i = 0; i < wheelSegments.length; i++) {
-    cursor -= wheelSegments[i].weight;
-    if (cursor <= 0) return i;
-  }
-  return wheelSegments.length - 1;
-};
-
 const spinWheel = () => {
   if (wheelSpinning) return;
-  wheelSegments = buildWheelSegments();
+  const weighted = !!(WHEEL_WEIGHTED && WHEEL_WEIGHTED.checked);
+  wheelSegments = buildWheelSegments(getWheelLots(lotArray), {
+    weighted,
+    colors: WHEEL_COLORS
+  });
   if (!wheelSegments.length) {
     setHelp('先にロットを追加してからスピン', 'Add lots before spinning');
     setWheelResult('No lots');
@@ -406,18 +360,14 @@ const spinWheel = () => {
     return;
   }
 
-  const winnerIndex = pickWeightedIndex();
+  const winnerIndex = pickWeightedIndex(wheelSegments);
   const winner = wheelSegments[winnerIndex];
-  // Pointer is at top (-90deg). Segment mid in canvas space; convert to degrees.
-  const midDeg = (winner.mid * 180) / Math.PI;
-  // We want midDeg + rotation ≡ -90 (top) mod 360
-  // rotation ≡ -90 - midDeg
-  const targetMod = ((-90 - midDeg) % 360 + 360) % 360;
-  const currentMod = ((wheelRotationDeg % 360) + 360) % 360;
-  let delta = targetMod - currentMod;
-  if (delta < 0) delta += 360;
   const extraTurns = 5 + Math.floor(Math.random() * 3);
-  const finalRotation = wheelRotationDeg + extraTurns * 360 + delta;
+  const finalRotation = spinTargetRotation({
+    currentRotationDeg: wheelRotationDeg,
+    winnerMidRadians: winner.mid,
+    extraTurns
+  });
 
   wheelSpinning = true;
   if (WHEEL_SPIN_BTN) WHEEL_SPIN_BTN.disabled = true;
@@ -429,7 +379,6 @@ const spinWheel = () => {
   const duration = 4500;
   const from = wheelRotationDeg;
   const change = finalRotation - from;
-
   const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
   const tick = (now) => {
@@ -532,3 +481,4 @@ setLog(lotArray);
 readLocalStorage();
 checkLogBtnDisabling();
 setHelp('名前 → 金額 → +、その後スピン', 'Name → amount → +, then spin');
+

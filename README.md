@@ -22,6 +22,24 @@ https://zisam.github.io/streamer-auction/
 2. OBS → Sources → Browser → paste the URL.
 3. Suggested size: **1920×1080** (or crop to the panel you need).
 
+## Tests
+
+```bash
+npm test
+```
+
+Runs unit tests for bids, bank totals, timer math, and roulette weighting (`test/auction-core.test.mjs`).
+
+## Pre-stream checklist
+
+1. `npm test` — all green  
+2. Open https://zisam.github.io/streamer-auction/build/index.html?v=tests1 (Ctrl+F5)  
+3. Add 2–3 lots with amounts → bank updates  
+4. Start / pause timer, ±1 / =10  
+5. Spin roulette (weighted on/off)  
+6. OBS: Browser Source → that URL, size ~1920×1080  
+7. Optional: send the streamer a 30-sec Loom/screen recording of the flow  
+
 ## Local development
 
 ```bash
